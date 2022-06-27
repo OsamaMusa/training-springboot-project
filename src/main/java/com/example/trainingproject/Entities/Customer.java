@@ -1,4 +1,4 @@
-package com.example.trainingproject.Entites;
+package com.example.trainingproject.Entities;
 
 import lombok.Data;
 

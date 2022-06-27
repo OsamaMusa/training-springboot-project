@@ -1,6 +1,6 @@
 package com.example.trainingproject.Repositories;
 
-import com.example.trainingproject.Entites.Customer;
+import com.example.trainingproject.Entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
