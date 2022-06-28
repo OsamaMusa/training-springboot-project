@@ -3,15 +3,16 @@ package com.example.trainingproject.Entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 
 @Entity
 @Table
 @Data
-public class Driver {
+public class Driver implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "driver_id")
     private int id;
 
@@ -29,5 +30,7 @@ public class Driver {
 
     @Column(nullable = false , name="dob")
     private Date dob;
+
+
 
 }

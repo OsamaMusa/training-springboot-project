@@ -4,6 +4,8 @@ import com.example.trainingproject.Entities.Car;
 import com.example.trainingproject.Services.CarService;
 import com.example.trainingproject.Services.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,14 +31,17 @@ public class CarController {
     }
 
     @GetMapping("{id}")
+    @Cacheable("car-cache")
     public Car findCarById(@PathVariable("id") int id){
         return CarService.findCarById(id);
     }
     @DeleteMapping("{id}")
+    @CacheEvict("car-cache")
     public boolean deleteCarById(@PathVariable("id") int id){
         return CarService.deleteCar(id);
     }
     @GetMapping("name/{name}")
+    @Cacheable("car-cache")
     public List<Car> findCarsByName(@PathVariable("name") String name){
         return CarService.findCarByName(name);
     }

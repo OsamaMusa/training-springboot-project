@@ -3,14 +3,15 @@ package com.example.trainingproject.Entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table
-public class Car {
+public class Car implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "car_id")
     private int id;
 
@@ -19,6 +20,8 @@ public class Car {
 
     @Column(name ="full_name")
     private String fullName;
+
+
 
 
 

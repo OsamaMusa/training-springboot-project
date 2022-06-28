@@ -4,6 +4,8 @@ import com.example.trainingproject.Entities.Package;
 import com.example.trainingproject.Services.CarService;
 import com.example.trainingproject.Services.PackageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,10 +31,12 @@ public class PackageController {
     }
 
     @GetMapping("{id}")
+    @Cacheable("package-cache")
     public Package findPackageById(@PathVariable("id") int id){
         return PackageService.findPackageById(id);
     }
     @DeleteMapping("{id}")
+    @CacheEvict("package-cache")
     public boolean deletePackageById(@PathVariable("id") int id){
         return PackageService.deletePackage(id);
     }
