@@ -3,6 +3,7 @@ package com.example.trainingproject.Controllers;
 import com.example.trainingproject.Entities.Car;
 import com.example.trainingproject.Services.CarService;
 import com.example.trainingproject.Services.CarService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/car")
+@Tag(name = "Cars" , description = "CRUD operation for car entity")
 public class CarController {
 
     @Autowired

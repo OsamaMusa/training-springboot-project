@@ -3,6 +3,7 @@ package com.example.trainingproject.Controllers;
 import com.example.trainingproject.Entities.Driver;
 import com.example.trainingproject.Services.CarService;
 import com.example.trainingproject.Services.DriverService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,11 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/driver")
+@Tag(name = "Drivers" , description = "CRUD operation for driver entity")
 public class DriverController {
-
     @Autowired
     private DriverService DriverService ;
-
     @GetMapping
     public List<Driver> getAllDrivers(){
         return DriverService.getAllDrivers();

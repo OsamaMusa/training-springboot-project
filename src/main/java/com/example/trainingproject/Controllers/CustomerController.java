@@ -3,6 +3,7 @@ package com.example.trainingproject.Controllers;
 import com.example.trainingproject.Entities.Customer;
 import com.example.trainingproject.Services.CarService;
 import com.example.trainingproject.Services.CustomerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/customer")
+@Tag(name = "Customers" , description = "CRUD operation for customer entity")
 public class CustomerController {
 
 
