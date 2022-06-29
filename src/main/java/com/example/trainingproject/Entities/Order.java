@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 
 @Entity(name = "orders")
@@ -27,7 +28,7 @@ public class Order implements Serializable {
 
     @Column(name ="deleverd_date", nullable = false)
     @NotNull
-    private boolean deleveredDate;
+    private Date deleveredDate;
 
     @Column(name ="receved", nullable = false)
     @NotNull
@@ -35,7 +36,7 @@ public class Order implements Serializable {
 
     @Column(name ="receved_date", nullable = false)
     @NotNull
-    private boolean recevedDate;
+    private Date recevedDate;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy= "order")
     private List<Package> packages;
