@@ -1,5 +1,6 @@
 package com.example.trainingproject.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Entity
@@ -30,7 +32,9 @@ public class Product implements Serializable {
     @Max(200)
     private double price;
 
-    @ManyToOne
-    @JoinColumn(name="package_id")
-    private Package packages;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "products")
+    private List<Package> packages;
+
+
 }

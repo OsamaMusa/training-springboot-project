@@ -1,5 +1,6 @@
 package com.example.trainingproject.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -47,7 +48,9 @@ public class Driver implements Serializable {
     @Past
     private Date dob;
 
+    @JsonIgnore
     @OneToMany(fetch=FetchType.LAZY, mappedBy= "driver")
     private List<Car> cars;
+
 
 }

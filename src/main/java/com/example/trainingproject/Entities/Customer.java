@@ -1,5 +1,6 @@
 package com.example.trainingproject.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -37,6 +38,7 @@ public class Customer implements Serializable {
     @Pattern(regexp = "^\\d{3}[- .]?\\d{3}[- .]?\\d{4}$")
     private String phone;
 
+    @JsonIgnore
     @OneToMany(fetch=FetchType.LAZY, mappedBy= "customer")
     private List<Order> order;
 

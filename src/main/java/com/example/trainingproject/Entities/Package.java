@@ -1,5 +1,6 @@
 package com.example.trainingproject.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -25,11 +26,17 @@ public class Package implements Serializable {
     @Max(value = 5)
     private double size;
 
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="order_id")
     private Order order;
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy= "packages")
-    private List<Product> products;
+
+    @ManyToMany
+    @JoinTable(
+            name = "package_products",
+            joinColumns = @JoinColumn(name = "package_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    List<Product> products;
+
 }

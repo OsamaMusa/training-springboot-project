@@ -1,5 +1,6 @@
 package com.example.trainingproject.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -28,12 +29,14 @@ public class Car implements Serializable {
     @Size(min = 5,max = 20)
     private String fullName;
 
+    @JsonIgnore
     @OneToMany(fetch=FetchType.LAZY, mappedBy= "car")
     private List<Order> order;
 
     @ManyToOne
     @JoinColumn(name="driver_id")
     private Driver driver;
+
 
 
 }
