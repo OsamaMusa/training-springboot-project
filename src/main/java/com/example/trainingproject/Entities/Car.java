@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Entity
@@ -27,8 +28,12 @@ public class Car implements Serializable {
     @Size(min = 5,max = 20)
     private String fullName;
 
+    @OneToMany(fetch=FetchType.LAZY, mappedBy= "car")
+    private List<Order> order;
 
-
+    @ManyToOne
+    @JoinColumn(name="driver_id")
+    private Driver driver;
 
 
 }

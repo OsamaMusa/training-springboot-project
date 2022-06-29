@@ -32,17 +32,17 @@ public class DriverController {
     }
 
     @GetMapping("{id}")
-    @Cacheable("driver-cache")
+    @Cacheable("${cache-name}")
     public Driver findDriverById(@PathVariable("id") int id){
         return DriverService.findDriverById(id);
     }
     @DeleteMapping("{id}")
-    @CacheEvict("driver-cache")
+    @CacheEvict("${cache-name}")
     public boolean deleteDriverById(@PathVariable("id") int id){
         return DriverService.deleteDriver(id);
     }
     @GetMapping("name/{name}")
-    @Cacheable("driver-cache")
+    @Cacheable("${cache-name}")
     public List<Driver> findDriversByName(@PathVariable("name") String name){
         return DriverService.findDriverByName(name);
     }

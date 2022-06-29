@@ -30,5 +30,7 @@ public class Product implements Serializable {
     @Max(200)
     private double price;
 
-
+    @ManyToOne
+    @JoinColumn(name="package_id")
+    private Package packages;
 }

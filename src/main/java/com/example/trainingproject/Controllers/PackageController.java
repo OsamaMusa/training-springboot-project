@@ -33,12 +33,12 @@ public class PackageController {
     }
 
     @GetMapping("{id}")
-    @Cacheable("package-cache")
+    @Cacheable("${cache-name}")
     public Package findPackageById(@PathVariable("id") int id){
         return PackageService.findPackageById(id);
     }
     @DeleteMapping("{id}")
-    @CacheEvict("package-cache")
+    @CacheEvict("${cache-name}")
     public boolean deletePackageById(@PathVariable("id") int id){
         return PackageService.deletePackage(id);
     }

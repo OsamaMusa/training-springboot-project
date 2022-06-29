@@ -41,19 +41,19 @@ public class CustomerController {
 
     @GetMapping("{id}")
     @Transactional()
-    @Cacheable("customer-cache")
+    @Cacheable("${cache-name}")
     public Customer findCustomerById(@PathVariable("id") int id){
         return customerService.findCustomerById(id);
 
     }
 
     @DeleteMapping("{id}")
-    @CacheEvict("customer-cache")
+    @CacheEvict("${cache-name}")
     public boolean deleteCustomerById(@PathVariable("id") int id){
         return customerService.deleteCustomer(id);
     }
     @GetMapping("name/{name}")
-    @Cacheable("customer-cache")
+    @Cacheable("${cache-name}")
     public List<Customer> findCustomersByName(@PathVariable("name") String name){
         return customerService.findCustomersByName(name);
     }

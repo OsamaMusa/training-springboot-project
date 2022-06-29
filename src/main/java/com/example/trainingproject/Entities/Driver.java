@@ -9,6 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table
@@ -46,6 +47,7 @@ public class Driver implements Serializable {
     @Past
     private Date dob;
 
-
+    @OneToMany(fetch=FetchType.LAZY, mappedBy= "driver")
+    private List<Car> cars;
 
 }

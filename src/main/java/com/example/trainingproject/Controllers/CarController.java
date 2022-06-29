@@ -34,17 +34,17 @@ public class CarController {
     }
 
     @GetMapping("{id}")
-    @Cacheable("car-cache")
+    @Cacheable("${cache-name}")
     public Car findCarById(@PathVariable("id") int id){
         return CarService.findCarById(id);
     }
     @DeleteMapping("{id}")
-    @CacheEvict("car-cache")
+    @CacheEvict("${cache-name}")
     public boolean deleteCarById(@PathVariable("id") int id){
         return CarService.deleteCar(id);
     }
     @GetMapping("name/{name}")
-    @Cacheable("car-cache")
+    @Cacheable("${cache-name}")
     public List<Car> findCarsByName(@PathVariable("name") String name){
         return CarService.findCarByName(name);
     }
