@@ -7,6 +7,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Entity
@@ -24,10 +25,11 @@ public class Package implements Serializable {
     @Max(value = 5)
     private double size;
 
-    @Column(name ="deleverd", nullable = false)
-    @NotNull
-    private boolean isDelevered;
 
+    @ManyToOne
+    @JoinColumn(name="order_id")
+    private Order order;
 
-
+    @OneToMany(fetch=FetchType.LAZY, mappedBy= "packages")
+    private List<Product> products;
 }

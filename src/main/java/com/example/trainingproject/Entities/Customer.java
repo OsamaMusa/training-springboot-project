@@ -4,8 +4,10 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table
@@ -32,6 +34,10 @@ public class Customer implements Serializable {
     @Column(nullable = false , name="phone")
     @NotNull
     @Size(min = 5,max = 20)
+    @Pattern(regexp = "^\\d{3}[- .]?\\d{3}[- .]?\\d{4}$")
     private String phone;
+
+    @OneToMany(fetch=FetchType.LAZY, mappedBy= "customer")
+    private List<Order> order;
 
 }
