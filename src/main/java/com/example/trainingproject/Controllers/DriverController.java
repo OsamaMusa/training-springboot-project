@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,11 +23,11 @@ public class DriverController {
         return DriverService.getAllDrivers();
     }
     @PostMapping
-    public Driver addDriver(@RequestBody Driver Driver){
+    public Driver addDriver(@Valid  @RequestBody Driver Driver){
         return DriverService.addDriver(Driver);
     }
     @PutMapping("{id}")
-    public Driver updateDriver(@PathVariable("id") int id,@RequestBody Driver Driver){
+    public Driver updateDriver(@PathVariable("id") int id,@Valid @RequestBody Driver Driver){
         return DriverService.updateDriver(id,Driver);
     }
 

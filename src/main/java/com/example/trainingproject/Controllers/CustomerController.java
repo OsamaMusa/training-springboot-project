@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -30,11 +31,11 @@ public class CustomerController {
     }
 
     @PostMapping
-    public Customer addCustomer(@RequestBody Customer customer){
+    public Customer addCustomer(@Valid @RequestBody Customer customer){
         return customerService.addCustomer(customer);
     }
     @PutMapping("{id}")
-    public Customer updateCustomer(@PathVariable("id") int id,@RequestBody Customer customer){
+    public Customer updateCustomer(@PathVariable("id") int id,@Valid @RequestBody Customer customer){
         return customerService.updateCustomer(id,customer);
     }
 

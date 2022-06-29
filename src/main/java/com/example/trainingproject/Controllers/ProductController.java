@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,11 +24,11 @@ public class ProductController {
         return ProductService.getAllProducts();
     }
     @PostMapping
-    public Product addProduct(@RequestBody Product Product){
+    public Product addProduct(@Valid  @RequestBody Product Product){
         return ProductService.addProduct(Product);
     }
     @PutMapping("{id}")
-    public Product updateProduct(@PathVariable("id") int id,@RequestBody Product Product){
+    public Product updateProduct(@PathVariable("id") int id,@Valid @RequestBody Product Product){
         return ProductService.updateProduct(id,Product);
     }
 

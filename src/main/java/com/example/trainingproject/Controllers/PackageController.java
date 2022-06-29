@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,11 +24,11 @@ public class PackageController {
         return PackageService.getAllPackages();
     }
     @PostMapping
-    public Package addPackage(@RequestBody Package Package){
+    public Package addPackage(@Valid  @RequestBody Package Package){
         return PackageService.addPackage(Package);
     }
     @PutMapping("{id}")
-    public Package updatePackage(@PathVariable("id") int id,@RequestBody Package Package){
+    public Package updatePackage(@PathVariable("id") int id,@Valid @RequestBody Package Package){
         return PackageService.updatePackage(id,Package);
     }
 
