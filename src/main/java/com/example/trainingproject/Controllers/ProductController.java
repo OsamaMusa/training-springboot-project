@@ -1,11 +1,9 @@
 package com.example.trainingproject.Controllers;
 
 import com.example.trainingproject.Entities.Product;
-import com.example.trainingproject.Services.CarService;
 import com.example.trainingproject.Services.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
@@ -21,27 +19,27 @@ public class ProductController {
     @Autowired
     private ProductService ProductService ;
     @GetMapping
-    public List<Product> getAllProducts(){
-        return ProductService.getAllProducts();
+    public List<Product> getAll(){
+        return ProductService.getAll();
     }
     @PostMapping
-    public Product addProduct(@Valid  @RequestBody Product Product){
-        return ProductService.addProduct(Product);
+    public Product insert(@Valid  @RequestBody Product product){
+        return ProductService.insert(product);
     }
     @PutMapping("{id}")
-    public Product updateProduct(@PathVariable("id") int id,@Valid @RequestBody Product Product){
-        return ProductService.updateProduct(id,Product);
+    public Product update(@PathVariable("id") int id,@Valid @RequestBody Product product){
+        return ProductService.update(id,product);
     }
 
     @GetMapping("{id}")
     @Cacheable("${cache-name}")
-    public Product findProductById(@PathVariable("id") int id){
-        return ProductService.findProductById(id);
+    public Product findById(@PathVariable("id") int id){
+        return ProductService.findById(id);
     }
     @DeleteMapping("{id}")
     @CacheEvict("${cache-name}")
-    public boolean deleteProductById(@PathVariable("id") int id){
-        return ProductService.deleteProduct(id);
+    public boolean deleteById(@PathVariable("id") int id){
+        return ProductService.delete(id);
     }
 
 }

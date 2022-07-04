@@ -1,35 +1,38 @@
 package com.example.trainingproject.Services;
 
-import com.example.trainingproject.Entities.Customer;
 import com.example.trainingproject.Entities.Order;
-import com.example.trainingproject.Repositories.ICustomerRepository;
+import com.example.trainingproject.IServices.IOrderService;
 import com.example.trainingproject.Repositories.IOrderRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class OrderService  {
+public class OrderService implements IOrderService {
 
     @Autowired
     private IOrderRepository orderRepository;
-    Logger logger = LoggerFactory.getLogger(OrderService.class);
+    @Autowired
+    private LoggerService loggerService;
+    Logger logger = loggerService.logger;
 
-    public Order addOrder(Order order) {
+    @Override
+    public Order insert(Order order) {
         Order res = orderRepository.save(order);
         logger.info("Inserted order : "+ res.toString());
         return res;
     }
 
-    public Order findOrderById(int id) {
+    @Override
+    public Order findById(int id) {
 
-        Order res =  orderRepository.findById(id).orElse(null);
-        if(res != null){
-            logger.info("Existed Order : "+ res.toString());
-            return  res;
+        Optional<Order> res =  orderRepository.findById(id);
+        if(res.isPresent()){
+            logger.info("Existed Order : "+ res.get().toString());
+            return  res.get();
         }
         logger.info("Order Id : "+ id+" not found !");
         return null;
@@ -37,17 +40,19 @@ public class OrderService  {
     }
 
 
-    public List<Order> getAllOrders() {
+    @Override
+    public List<Order> getAll() {
         List<Order> res = orderRepository.findAll();
         logger.info("Receved "+res.size() +" order . ");
         return res;
     }
 
-    public boolean deleteOrder(int id) {
-        Order order =  orderRepository.findById(id).orElse(null);
-        if(order != null ){
-            logger.info("Deleted order : "+ order.toString());
-            orderRepository.delete(order);
+    @Override
+    public boolean delete(int id) {
+        Optional<Order> order =  orderRepository.findById(id);
+        if(order.isPresent() ){
+            logger.info("Deleted order : "+ order.get().toString());
+            orderRepository.delete(order.get());
             return  true;
         }
         logger.info("Customer Id : "+ id+" not found !");
@@ -55,9 +60,10 @@ public class OrderService  {
 
     }
 
-    public Order updateOrder(int id , Order order) {
-        Order res =  orderRepository.findById(id).orElse(null);
-        if(res != null && order != null){
+    @Override
+    public Order update(int id, Order order) {
+        Optional<Order> res =  orderRepository.findById(id);
+        if(res.isPresent() && order != null){
             logger.info("Updated customer : "+ order.toString());
             return  orderRepository.save(order);
         }

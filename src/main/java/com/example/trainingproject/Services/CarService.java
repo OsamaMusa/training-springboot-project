@@ -1,40 +1,46 @@
 package com.example.trainingproject.Services;
 
 import com.example.trainingproject.Entities.Car;
+import com.example.trainingproject.IServices.ICarService;
 import com.example.trainingproject.Repositories.ICarRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class CarService  {
+public class CarService implements ICarService {
 
     @Autowired
     private ICarRepository CarRepository;
-    Logger logger = LoggerFactory.getLogger(CarService.class);
+    @Autowired
+    private LoggerService loggerService;
+    Logger logger = loggerService.logger;
 
-    public Car addCar(Car Car) {
-        Car res = CarRepository.save(Car);
+    @Override
+    public Car insert(Car car) {
+        Car res = CarRepository.save(car);
         logger.info("Inserted Car : "+ res.toString());
         return res;
     }
 
-    public Car findCarById(int id) {
+    @Override
+    public Car findById(int id) {
 
-        Car res =  CarRepository.findById(id).orElse(null);
-        if(res != null){
+        Optional<Car> res =  CarRepository.findById(id);
+        if(res.isPresent()){
             logger.info("Existed Car : "+ res.toString());
-            return  res;
+            return  res.get();
         }
         logger.info("Car Id : "+ id+" not found !");
         return null;
 
     }
 
-    public List<Car> findCarByName(String fullName) {
+    @Override
+    public List<Car> findByName(String fullName) {
         List<Car> Cars =  CarRepository.findCarByFullName(fullName);
         if(Cars != null ){
             logger.info("Existed Car : "+ Cars.toString());
@@ -45,17 +51,19 @@ public class CarService  {
 
     }
 
-    public List<Car> getAllCars() {
+    @Override
+    public List<Car> getAll() {
         List<Car> res = CarRepository.findAll();
         logger.info("Receved "+res.size() +" Car : ");
         return res;
     }
 
-    public boolean deleteCar(int id) {
-        Car Car =  CarRepository.findById(id).orElse(null);
-        if(Car != null ){
-            logger.info("Deleted Car : "+ Car.toString());
-            CarRepository.delete(Car);
+    @Override
+    public boolean delete(int id) {
+        Optional<Car> car =  CarRepository.findById(id);
+        if(car.isPresent() ){
+            logger.info("Deleted Car : "+ car.get().toString());
+            CarRepository.delete(car.get());
             return  true;
         }
         logger.info("Car Id : "+ id+" not found !");
@@ -63,11 +71,12 @@ public class CarService  {
 
     }
 
-    public Car updateCar(int id , Car Car) {
-        Car foundedCar =  CarRepository.findById(id).orElse(null);
-        if(foundedCar != null && Car != null){
-            logger.info("Updated Car : "+ Car.toString());
-            return  CarRepository.save(Car);
+    @Override
+    public Car update(int id, Car car) {
+        Optional<Car> foundedCar =  CarRepository.findById(id);
+        if(foundedCar.isPresent()  && car != null){
+            logger.info("Updated Car : "+ car.toString());
+            return  CarRepository.save(car);
         }
         logger.info("Car Id : "+ id+" not found !");
         return null;

@@ -1,40 +1,46 @@
 package com.example.trainingproject.Services;
 
 import com.example.trainingproject.Entities.Customer;
+import com.example.trainingproject.IServices.ICustomerService;
 import com.example.trainingproject.Repositories.ICustomerRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class CustomerService  {
+public class CustomerService implements ICustomerService {
 
     @Autowired
     private ICustomerRepository customerRepository;
-    Logger logger = LoggerFactory.getLogger(CustomerService.class);
+    @Autowired
+    private LoggerService loggerService;
+    Logger logger = loggerService.logger;
 
-    public Customer addCustomer(Customer customer) {
+    @Override
+    public Customer insert(Customer customer) {
         Customer res = customerRepository.save(customer);
         logger.info("Inserted customer : "+ res.toString());
         return res;
     }
 
-    public Customer findCustomerById(int id) {
+    @Override
+    public Customer findById(int id) {
 
-        Customer res =  customerRepository.findById(id).orElse(null);
-        if(res != null){
-            logger.info("Existed customer : "+ res.toString());
-            return  res;
+        Optional<Customer> res =  customerRepository.findById(id);
+        if(res.isPresent()){
+            logger.info("Existed customer : "+ res.get().toString());
+            return  res.get();
         }
         logger.info("Customer Id : "+ id+" not found !");
         return null;
 
     }
 
-    public List<Customer> findCustomersByName(String fullName) {
+    @Override
+    public List<Customer> findByName(String fullName) {
         List<Customer> customers =  customerRepository.findCustomerByFullName(fullName);
         if(customers != null ){
             logger.info("Existed customer : "+ customers.toString());
@@ -45,17 +51,19 @@ public class CustomerService  {
 
     }
 
-    public List<Customer> getAllCustomers() {
+    @Override
+    public List<Customer> getAll() {
         List<Customer> res = customerRepository.findAll();
         logger.info("Receved "+res.size() +" customer : ");
         return res;
     }
 
-    public boolean deleteCustomer(int id) {
-        Customer customer =  customerRepository.findById(id).orElse(null);
-        if(customer != null ){
-            logger.info("Deleted customer : "+ customer.toString());
-            customerRepository.delete(customer);
+    @Override
+    public boolean delete(int id) {
+        Optional<Customer> customer =  customerRepository.findById(id);
+        if(customer.isPresent() ){
+            logger.info("Deleted customer : "+ customer.get().toString());
+            customerRepository.delete(customer.get());
             return  true;
         }
         logger.info("Customer Id : "+ id+" not found !");
@@ -63,9 +71,10 @@ public class CustomerService  {
 
     }
 
-    public Customer updateCustomer(int id , Customer customer) {
-        Customer foundedCustomer =  customerRepository.findById(id).orElse(null);
-        if(foundedCustomer != null && customer != null){
+    @Override
+    public Customer update(int id, Customer customer) {
+        Optional<Customer> foundedCustomer =  customerRepository.findById(id);
+        if(foundedCustomer.isPresent()  && customer != null){
             logger.info("Updated customer : "+ customer.toString());
             return  customerRepository.save(customer);
         }

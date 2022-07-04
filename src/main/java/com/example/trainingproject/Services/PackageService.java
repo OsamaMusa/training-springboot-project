@@ -1,50 +1,57 @@
 package com.example.trainingproject.Services;
 
 import com.example.trainingproject.Entities.Package;
+import com.example.trainingproject.IServices.IPackageService;
 import com.example.trainingproject.Repositories.IPackageRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class PackageService  {
+public class PackageService implements IPackageService {
 
     @Autowired
     private IPackageRepository PackageRepository;
-    Logger logger = LoggerFactory.getLogger(PackageService.class);
+    @Autowired
+    private LoggerService loggerService;
+    Logger logger = loggerService.logger;
 
-    public Package addPackage(Package Package) {
+    @Override
+    public Package insert(Package Package) {
         Package res = PackageRepository.save(Package);
         logger.info("Inserted Package : "+ res.toString());
         return res;
     }
 
-    public Package findPackageById(int id) {
+    @Override
+    public Package findById(int id) {
 
-        Package res =  PackageRepository.findById(id).orElse(null);
-        if(res != null){
-            logger.info("Existed Package : "+ res.toString());
-            return  res;
+        Optional<Package> res =  PackageRepository.findById(id);
+        if(res.isPresent()){
+            logger.info("Existed Package : "+ res.get().toString());
+            return  res.get();
         }
         logger.info("Package Id : "+ id+" not found !");
         return null;
 
     }
 
-    public List<Package> getAllPackages() {
+    @Override
+    public List<Package> getAll() {
         List<Package> res = PackageRepository.findAll();
         logger.info("Receved "+res.size() +" Package : ");
         return res;
     }
 
-    public boolean deletePackage(int id) {
-        Package Package =  PackageRepository.findById(id).orElse(null);
-        if(Package != null ){
-            logger.info("Deleted Package : "+ Package.toString());
-            PackageRepository.delete(Package);
+    @Override
+    public boolean delete(int id) {
+        Optional<Package> myPackage =  PackageRepository.findById(id);
+        if(myPackage.isPresent() ){
+            logger.info("Deleted Package : "+ myPackage.get().toString());
+            PackageRepository.delete(myPackage.get());
             return  true;
         }
         logger.info("Package Id : "+ id+" not found !");
@@ -52,11 +59,12 @@ public class PackageService  {
 
     }
 
-    public Package updatePackage(int id , Package Package) {
-        Package foundedPackage =  PackageRepository.findById(id).orElse(null);
-        if(foundedPackage != null && Package != null){
-            logger.info("Updated Package : "+ Package.toString());
-            return  PackageRepository.save(Package);
+    @Override
+    public Package update(int id, Package myPackage) {
+        Optional<Package> foundedPackage =  PackageRepository.findById(id);
+        if(foundedPackage.isPresent() && myPackage != null){
+            logger.info("Updated Package : "+ myPackage.toString());
+            return  PackageRepository.save(myPackage);
         }
         logger.info("Package Id : "+ id+" not found !");
         return null;

@@ -1,50 +1,57 @@
 package com.example.trainingproject.Services;
 
 import com.example.trainingproject.Entities.Product;
+import com.example.trainingproject.IServices.IProductService;
 import com.example.trainingproject.Repositories.IProductRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class ProductService  {
+public class ProductService implements IProductService {
 
     @Autowired
     private IProductRepository ProductRepository;
-    Logger logger = LoggerFactory.getLogger(ProductService.class);
+    @Autowired
+    private LoggerService loggerService;
+    Logger logger = loggerService.logger;
 
-    public Product addProduct(Product Product) {
-        Product res = ProductRepository.save(Product);
+    @Override
+    public Product insert(Product product) {
+        Product res = ProductRepository.save(product);
         logger.info("Inserted Product : "+ res.toString());
         return res;
     }
 
-    public Product findProductById(int id) {
+    @Override
+    public Product findById(int id) {
 
-        Product res =  ProductRepository.findById(id).orElse(null);
-        if(res != null){
-            logger.info("Existed Product : "+ res.toString());
-            return  res;
+       Optional<Product>  res =  ProductRepository.findById(id);
+        if(res.isPresent()){
+            logger.info("Existed Product : "+ res.get().toString());
+            return  res.get();
         }
         logger.info("Product Id : "+ id+" not found !");
         return null;
 
     }
 
-    public List<Product> getAllProducts() {
+    @Override
+    public List<Product> getAll() {
         List<Product> res = ProductRepository.findAll();
         logger.info("Receved "+res.size() +" Product : ");
         return res;
     }
 
-    public boolean deleteProduct(int id) {
-        Product Product =  ProductRepository.findById(id).orElse(null);
-        if(Product != null ){
-            logger.info("Deleted Product : "+ Product.toString());
-            ProductRepository.delete(Product);
+    @Override
+    public boolean delete(int id) {
+        Optional<Product> product =  ProductRepository.findById(id);
+        if(product.isPresent() ){
+            logger.info("Deleted Product : "+ product.get().toString());
+            ProductRepository.delete(product.get());
             return  true;
         }
         logger.info("Product Id : "+ id+" not found !");
@@ -52,11 +59,12 @@ public class ProductService  {
 
     }
 
-    public Product updateProduct(int id , Product Product) {
-        Product foundedProduct =  ProductRepository.findById(id).orElse(null);
-        if(foundedProduct != null && Product != null){
-            logger.info("Updated Product : "+ Product.toString());
-            return  ProductRepository.save(Product);
+    @Override
+    public Product update(int id, Product product) {
+        Optional<Product> foundedProduct =  ProductRepository.findById(id);
+        if(foundedProduct.isPresent() && product != null){
+            logger.info("Updated Product : "+ product.toString());
+            return  ProductRepository.save(product);
         }
         logger.info("Product Id : "+ id+" not found !");
         return null;

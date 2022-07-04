@@ -2,11 +2,12 @@ package com.example.trainingproject.Controllers;
 
 import com.example.trainingproject.Entities.Car;
 import com.example.trainingproject.Services.CarService;
-import com.example.trainingproject.Services.CarService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,34 +19,35 @@ import java.util.List;
 public class CarController {
 
     @Autowired
-    private CarService CarService ;
+    private CarService carService;
 
     @GetMapping
-    public List<Car> getAllCars(){
-        return CarService.getAllCars();
+    public ResponseEntity<List<Car>> getAll(){
+        return new ResponseEntity<List<Car>>( carService.getAll(),HttpStatus.OK);
     }
     @PostMapping
-    public Car addCar(@Valid @RequestBody Car Car){
-        return CarService.addCar(Car);
+    public ResponseEntity<Car> insert(@Valid @RequestBody Car car){
+        return new ResponseEntity<Car>(carService.insert(car), HttpStatus.CREATED);
     }
     @PutMapping("{id}")
-    public Car updateCar(@PathVariable("id") int id,@Valid @RequestBody Car Car){
-        return CarService.updateCar(id,Car);
+    public ResponseEntity<Car> update(@PathVariable("id") int id,@Valid @RequestBody Car car){
+        return new ResponseEntity<Car>(carService.update(id,car),HttpStatus.OK);
     }
 
     @GetMapping("{id}")
     @Cacheable("${cache-name}")
-    public Car findCarById(@PathVariable("id") int id){
-        return CarService.findCarById(id);
+    public ResponseEntity<Car> findById(@PathVariable("id") int id){
+        return new ResponseEntity<Car>(carService.findById(id),HttpStatus.OK);
     }
+
     @DeleteMapping("{id}")
     @CacheEvict("${cache-name}")
-    public boolean deleteCarById(@PathVariable("id") int id){
-        return CarService.deleteCar(id);
+    public ResponseEntity<Boolean> deleteById(@PathVariable("id") int id){
+        return new ResponseEntity<Boolean>( carService.delete(id),HttpStatus.OK);
     }
     @GetMapping("name/{name}")
     @Cacheable("${cache-name}")
-    public List<Car> findCarsByName(@PathVariable("name") String name){
-        return CarService.findCarByName(name);
+    public ResponseEntity<List<Car>> findByName(@PathVariable("name") String name){
+        return  new ResponseEntity<List<Car>>( carService.findByName(name),HttpStatus.OK);
     }
 }

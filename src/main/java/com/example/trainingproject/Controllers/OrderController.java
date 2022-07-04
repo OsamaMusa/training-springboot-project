@@ -1,6 +1,5 @@
 package com.example.trainingproject.Controllers;
 
-import com.example.trainingproject.Entities.Customer;
 import com.example.trainingproject.Entities.Order;
 import com.example.trainingproject.Services.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,32 +22,32 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping
-    public List<Order> getAllOrders(){
-        return orderService.getAllOrders();
+    public List<Order> getAll(){
+        return orderService.getAll();
 
     }
 
     @PostMapping
-    public Order addCustomer(@Valid @RequestBody Order order){
-        return orderService.addOrder(order);
+    public Order insert(@Valid @RequestBody Order order){
+        return orderService.insert(order);
     }
     @PutMapping("{id}")
-    public Order updateOrder(@PathVariable("id") int id,@Valid @RequestBody Order order){
-        return orderService.updateOrder(id,order);
+    public Order update(@PathVariable("id") int id,@Valid @RequestBody Order order){
+        return orderService.update(id,order);
     }
 
     @GetMapping("{id}")
     @Transactional()
     @Cacheable("${cache-name}")
-    public Order findOrderById(@PathVariable("id") int id){
-        return orderService.findOrderById(id);
+    public Order findById(@PathVariable("id") int id){
+        return orderService.findById(id);
 
     }
 
     @DeleteMapping("{id}")
     @CacheEvict("${cache-name}")
-    public boolean deleteOrderById(@PathVariable("id") int id){
-        return orderService.deleteOrder(id);
+    public boolean deleteById(@PathVariable("id") int id){
+        return orderService.delete(id);
     }
 
 }

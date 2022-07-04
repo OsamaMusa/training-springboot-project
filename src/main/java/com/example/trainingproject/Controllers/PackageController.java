@@ -1,7 +1,6 @@
 package com.example.trainingproject.Controllers;
 
 import com.example.trainingproject.Entities.Package;
-import com.example.trainingproject.Services.CarService;
 import com.example.trainingproject.Services.PackageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,29 +17,29 @@ import java.util.List;
 public class PackageController {
 
     @Autowired
-    private PackageService PackageService ;
+    private PackageService packageService;
     @GetMapping
-    public List<Package> getAllPackages(){
-        return PackageService.getAllPackages();
+    public List<Package> getAll(){
+        return packageService.getAll();
     }
     @PostMapping
-    public Package addPackage(@Valid  @RequestBody Package Package){
-        return PackageService.addPackage(Package);
+    public Package insert(@Valid  @RequestBody Package Package){
+        return packageService.insert(Package);
     }
     @PutMapping("{id}")
-    public Package updatePackage(@PathVariable("id") int id,@Valid @RequestBody Package Package){
-        return PackageService.updatePackage(id,Package);
+    public Package update(@PathVariable("id") int id,@Valid @RequestBody Package myPackage){
+        return packageService.update(id,myPackage);
     }
 
     @GetMapping("{id}")
     @Cacheable("${cache-name}")
-    public Package findPackageById(@PathVariable("id") int id){
-        return PackageService.findPackageById(id);
+    public Package findById(@PathVariable("id") int id){
+        return packageService.findById(id);
     }
     @DeleteMapping("{id}")
     @CacheEvict("${cache-name}")
-    public boolean deletePackageById(@PathVariable("id") int id){
-        return PackageService.deletePackage(id);
+    public boolean deleteById(@PathVariable("id") int id){
+        return packageService.delete(id);
     }
 
 }
