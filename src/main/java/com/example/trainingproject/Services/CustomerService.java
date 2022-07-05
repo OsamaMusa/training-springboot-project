@@ -1,5 +1,6 @@
 package com.example.trainingproject.Services;
 
+import com.example.trainingproject.CustomExeptions.MyResourceNotFoundException;
 import com.example.trainingproject.Entities.Customer;
 import com.example.trainingproject.IServices.ICustomerService;
 import com.example.trainingproject.Repositories.ICustomerRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,9 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public Customer insert(Customer customer) {
+        if(customer == null)
+            throw new MyResourceNotFoundException("Can't insert null as Customer object");
+
         Customer res = customerRepository.save(customer);
         logger.info("Inserted customer : "+ res.toString());
         return res;
@@ -35,7 +40,7 @@ public class CustomerService implements ICustomerService {
             return  res.get();
         }
         logger.info("Customer Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no customer to display");
 
     }
 
@@ -47,7 +52,7 @@ public class CustomerService implements ICustomerService {
             return  customers;
         }
         logger.info("Customer Name : "+ fullName +" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no customer to display");
 
     }
 
@@ -55,7 +60,10 @@ public class CustomerService implements ICustomerService {
     public List<Customer> getAll() {
         List<Customer> res = customerRepository.findAll();
         logger.info("Receved "+res.size() +" customer : ");
-        return res;
+        if(res.size() > 0)
+         return res;
+        throw new MyResourceNotFoundException("there is no customer to display");
+
     }
 
     @Override
@@ -67,19 +75,21 @@ public class CustomerService implements ICustomerService {
             return  true;
         }
         logger.info("Customer Id : "+ id+" not found !");
-        return false;
+        throw new MyResourceNotFoundException("there is no customer to delete");
 
     }
 
     @Override
     public Customer update(int id, Customer customer) {
+        if(customer == null )
+            throw new MyResourceNotFoundException("Can't update null as Customer object");
         Optional<Customer> foundedCustomer =  customerRepository.findById(id);
-        if(foundedCustomer.isPresent()  && customer != null){
+        if(foundedCustomer.isPresent()){
             logger.info("Updated customer : "+ customer.toString());
             return  customerRepository.save(customer);
         }
         logger.info("Customer Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no customer to update");
 
     }
 }

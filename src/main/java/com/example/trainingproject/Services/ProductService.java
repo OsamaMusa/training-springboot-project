@@ -1,5 +1,6 @@
 package com.example.trainingproject.Services;
 
+import com.example.trainingproject.CustomExeptions.MyResourceNotFoundException;
 import com.example.trainingproject.Entities.Product;
 import com.example.trainingproject.IServices.IProductService;
 import com.example.trainingproject.Repositories.IProductRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,8 @@ public class ProductService implements IProductService {
 
     @Override
     public Product insert(Product product) {
+        if(product == null)
+            throw new MyResourceNotFoundException("Can't insert null as Product object");
         Product res = ProductRepository.save(product);
         logger.info("Inserted Product : "+ res.toString());
         return res;
@@ -35,7 +39,7 @@ public class ProductService implements IProductService {
             return  res.get();
         }
         logger.info("Product Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no product to display");
 
     }
 
@@ -43,7 +47,10 @@ public class ProductService implements IProductService {
     public List<Product> getAll() {
         List<Product> res = ProductRepository.findAll();
         logger.info("Receved "+res.size() +" Product : ");
-        return res;
+        if(res.size() > 0)
+          return res;
+        throw new MyResourceNotFoundException("there is no product to display");
+
     }
 
     @Override
@@ -55,19 +62,21 @@ public class ProductService implements IProductService {
             return  true;
         }
         logger.info("Product Id : "+ id+" not found !");
-        return false;
+        throw new MyResourceNotFoundException("there is no product to delete");
 
     }
 
     @Override
     public Product update(int id, Product product) {
+        if(product == null)
+            throw new MyResourceNotFoundException("Can't update null as Product object");
         Optional<Product> foundedProduct =  ProductRepository.findById(id);
-        if(foundedProduct.isPresent() && product != null){
+        if(foundedProduct.isPresent()){
             logger.info("Updated Product : "+ product.toString());
             return  ProductRepository.save(product);
         }
         logger.info("Product Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no product to update");
 
     }
 }

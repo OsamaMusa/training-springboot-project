@@ -1,5 +1,6 @@
 package com.example.trainingproject.Services;
 
+import com.example.trainingproject.CustomExeptions.MyResourceNotFoundException;
 import com.example.trainingproject.Entities.Driver;
 import com.example.trainingproject.IServices.IDriverService;
 import com.example.trainingproject.Repositories.IDriverRepository;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -22,6 +24,9 @@ public class DriverService implements IDriverService {
 
     @Override
     public Driver insert(Driver driver) {
+        if(driver == null)
+            throw new MyResourceNotFoundException("Can't insert null as Driver object");
+
         Driver res = DriverRepository.save(driver);
         logger.info("Inserted Driver : "+ res.toString());
         return res;
@@ -36,7 +41,7 @@ public class DriverService implements IDriverService {
             return  res.get();
         }
         logger.info("Driver Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no driver to display");
 
     }
 
@@ -48,7 +53,7 @@ public class DriverService implements IDriverService {
             return  drivers;
         }
         logger.info("Driver Name : "+ fullName +" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no driver to display");
 
     }
 
@@ -56,7 +61,10 @@ public class DriverService implements IDriverService {
     public List<Driver> getAll() {
         List<Driver> res = DriverRepository.findAll();
         logger.info("Receved "+res.size() +" Driver : ");
-        return res;
+        if(res.size() > 0)
+          return res;
+        throw new MyResourceNotFoundException("there is no driver to display");
+
     }
 
     @Override
@@ -68,19 +76,21 @@ public class DriverService implements IDriverService {
             return  true;
         }
         logger.info("Driver Id : "+ id+" not found !");
-        return false;
+        throw new MyResourceNotFoundException("there is no driver to delete");
 
     }
 
     @Override
     public Driver update(int id, Driver driver) {
+        if(driver == null)
+            throw  new MyResourceNotFoundException("Can't update null as Driver object");
         Optional<Driver> foundedDriver =  DriverRepository.findById(id);
-        if(foundedDriver.isPresent()  && driver != null){
+        if(foundedDriver.isPresent()){
             logger.info("Updated Driver : "+ driver.toString());
             return  DriverRepository.save(driver);
         }
         logger.info("Driver Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no driver to update");
 
     }
 }

@@ -27,7 +27,9 @@ public class CarController {
     }
     @PostMapping
     public ResponseEntity<Car> insert(@Valid @RequestBody Car car){
-        return new ResponseEntity<Car>(carService.insert(car), HttpStatus.CREATED);
+
+            return new ResponseEntity<Car>(carService.insert(car), HttpStatus.CREATED);
+
     }
     @PutMapping("{id}")
     public ResponseEntity<Car> update(@PathVariable("id") int id,@Valid @RequestBody Car car){

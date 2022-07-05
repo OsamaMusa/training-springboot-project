@@ -1,5 +1,6 @@
 package com.example.trainingproject.Services;
 
+import com.example.trainingproject.CustomExeptions.MyResourceNotFoundException;
 import com.example.trainingproject.Entities.Car;
 import com.example.trainingproject.IServices.ICarService;
 import com.example.trainingproject.Repositories.ICarRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,8 @@ public class CarService implements ICarService {
 
     @Override
     public Car insert(Car car) {
+        if(car == null)
+            throw  new MyResourceNotFoundException("Can't insert null as Car object");
         Car res = CarRepository.save(car);
         logger.info("Inserted Car : "+ res.toString());
         return res;
@@ -35,7 +39,7 @@ public class CarService implements ICarService {
             return  res.get();
         }
         logger.info("Car Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no cars to display");
 
     }
 
@@ -47,7 +51,7 @@ public class CarService implements ICarService {
             return  Cars;
         }
         logger.info("Car Name : "+ fullName +" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no cars to display");
 
     }
 
@@ -55,7 +59,9 @@ public class CarService implements ICarService {
     public List<Car> getAll() {
         List<Car> res = CarRepository.findAll();
         logger.info("Receved "+res.size() +" Car : ");
-        return res;
+        if(res.size() > 0 )
+          return res;
+        throw new MyResourceNotFoundException("there is no cars to display");
     }
 
     @Override
@@ -67,19 +73,23 @@ public class CarService implements ICarService {
             return  true;
         }
         logger.info("Car Id : "+ id+" not found !");
-        return false;
+        throw new MyResourceNotFoundException("there is no cars to delete ");
 
     }
 
     @Override
     public Car update(int id, Car car) {
+        if(car == null)
+            throw new MyResourceNotFoundException("Can't update null as Car object");
+
         Optional<Car> foundedCar =  CarRepository.findById(id);
-        if(foundedCar.isPresent()  && car != null){
+        if(foundedCar.isPresent() ){
             logger.info("Updated Car : "+ car.toString());
             return  CarRepository.save(car);
         }
-        logger.info("Car Id : "+ id+" not found !");
-        return null;
+
+        logger.info("Car Id : "+ id +" not found !");
+        throw new MyResourceNotFoundException("there is no cars to update ");
 
     }
 }

@@ -1,5 +1,6 @@
 package com.example.trainingproject.Services;
 
+import com.example.trainingproject.CustomExeptions.MyResourceNotFoundException;
 import com.example.trainingproject.Entities.Order;
 import com.example.trainingproject.IServices.IOrderService;
 import com.example.trainingproject.Repositories.IOrderRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,8 @@ public class OrderService implements IOrderService {
 
     @Override
     public Order insert(Order order) {
+        if(order == null)
+            throw new MyResourceNotFoundException("Can't insert null as Order object");
         Order res = orderRepository.save(order);
         logger.info("Inserted order : "+ res.toString());
         return res;
@@ -35,7 +39,7 @@ public class OrderService implements IOrderService {
             return  res.get();
         }
         logger.info("Order Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no order to display");
 
     }
 
@@ -44,7 +48,10 @@ public class OrderService implements IOrderService {
     public List<Order> getAll() {
         List<Order> res = orderRepository.findAll();
         logger.info("Receved "+res.size() +" order . ");
-        return res;
+        if(res.size() > 0)
+           return res;
+        throw new MyResourceNotFoundException("there is no order to display");
+
     }
 
     @Override
@@ -56,19 +63,22 @@ public class OrderService implements IOrderService {
             return  true;
         }
         logger.info("Customer Id : "+ id+" not found !");
-        return false;
+        throw new MyResourceNotFoundException("there is no order to delete");
 
     }
 
     @Override
     public Order update(int id, Order order) {
+        if(order == null)
+            throw new MyResourceNotFoundException("Can't update null as Order object");
+
         Optional<Order> res =  orderRepository.findById(id);
-        if(res.isPresent() && order != null){
+        if(res.isPresent() ){
             logger.info("Updated customer : "+ order.toString());
             return  orderRepository.save(order);
         }
         logger.info("Customer Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no order to update");
 
     }
 }

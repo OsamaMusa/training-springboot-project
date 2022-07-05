@@ -1,5 +1,6 @@
 package com.example.trainingproject.Services;
 
+import com.example.trainingproject.CustomExeptions.MyResourceNotFoundException;
 import com.example.trainingproject.Entities.Package;
 import com.example.trainingproject.IServices.IPackageService;
 import com.example.trainingproject.Repositories.IPackageRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -20,8 +22,10 @@ public class PackageService implements IPackageService {
     Logger logger = loggerService.logger;
 
     @Override
-    public Package insert(Package Package) {
-        Package res = PackageRepository.save(Package);
+    public Package insert(Package myPackage) {
+        if(myPackage == null)
+            throw new MyResourceNotFoundException("Can't insert null as Package object");
+        Package res = PackageRepository.save(myPackage);
         logger.info("Inserted Package : "+ res.toString());
         return res;
     }
@@ -35,7 +39,7 @@ public class PackageService implements IPackageService {
             return  res.get();
         }
         logger.info("Package Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no package to display");
 
     }
 
@@ -43,7 +47,10 @@ public class PackageService implements IPackageService {
     public List<Package> getAll() {
         List<Package> res = PackageRepository.findAll();
         logger.info("Receved "+res.size() +" Package : ");
-        return res;
+        if(res.size() > 0)
+          return res;
+        throw new MyResourceNotFoundException("there is no package to display");
+
     }
 
     @Override
@@ -55,19 +62,21 @@ public class PackageService implements IPackageService {
             return  true;
         }
         logger.info("Package Id : "+ id+" not found !");
-        return false;
+        throw new MyResourceNotFoundException("there is no package to delete");
 
     }
 
     @Override
     public Package update(int id, Package myPackage) {
+        if(myPackage== null)
+            throw new MyResourceNotFoundException("Can't update null as Package object");
         Optional<Package> foundedPackage =  PackageRepository.findById(id);
-        if(foundedPackage.isPresent() && myPackage != null){
+        if(foundedPackage.isPresent()){
             logger.info("Updated Package : "+ myPackage.toString());
             return  PackageRepository.save(myPackage);
         }
         logger.info("Package Id : "+ id+" not found !");
-        return null;
+        throw new MyResourceNotFoundException("there is no package to update");
 
     }
 }
