@@ -3,13 +3,12 @@ package com.example.trainingproject.Services;
 import com.example.trainingproject.CustomExeptions.MyResourceNotFoundException;
 import com.example.trainingproject.Entities.Package;
 import com.example.trainingproject.IServices.IPackageService;
-import com.example.trainingproject.Repositories.IPackageRepository;
+import com.example.trainingproject.IRepositories.IPackageRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service

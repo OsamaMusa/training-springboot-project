@@ -3,13 +3,12 @@ package com.example.trainingproject.Services;
 import com.example.trainingproject.CustomExeptions.MyResourceNotFoundException;
 import com.example.trainingproject.Entities.Customer;
 import com.example.trainingproject.IServices.ICustomerService;
-import com.example.trainingproject.Repositories.ICustomerRepository;
+import com.example.trainingproject.IRepositories.ICustomerRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -26,7 +25,7 @@ public class CustomerService implements ICustomerService {
         if(customer == null)
             throw new MyResourceNotFoundException("Can't insert null as Customer object");
 
-        Customer res = customerRepository.save(customer);
+        Customer res = customerRepository.insert(customer);
         logger.info("Inserted customer : "+ res.toString());
         return res;
     }
@@ -71,7 +70,7 @@ public class CustomerService implements ICustomerService {
         Optional<Customer> customer =  customerRepository.findById(id);
         if(customer.isPresent() ){
             logger.info("Deleted customer : "+ customer.get().toString());
-            customerRepository.delete(customer.get());
+            customerRepository.delete(customer.get().getId());
             return  true;
         }
         logger.info("Customer Id : "+ id+" not found !");
@@ -86,7 +85,7 @@ public class CustomerService implements ICustomerService {
         Optional<Customer> foundedCustomer =  customerRepository.findById(id);
         if(foundedCustomer.isPresent()){
             logger.info("Updated customer : "+ customer.toString());
-            return  customerRepository.save(customer);
+            return  customerRepository.update(customer);
         }
         logger.info("Customer Id : "+ id+" not found !");
         throw new MyResourceNotFoundException("there is no customer to update");

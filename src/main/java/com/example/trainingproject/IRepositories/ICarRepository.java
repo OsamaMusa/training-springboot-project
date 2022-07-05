@@ -1,4 +1,4 @@
-package com.example.trainingproject.Repositories;
+package com.example.trainingproject.IRepositories;
 
 import com.example.trainingproject.Entities.Car;
 import org.springframework.data.jpa.repository.JpaRepository;

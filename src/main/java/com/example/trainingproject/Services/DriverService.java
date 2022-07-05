@@ -3,14 +3,12 @@ package com.example.trainingproject.Services;
 import com.example.trainingproject.CustomExeptions.MyResourceNotFoundException;
 import com.example.trainingproject.Entities.Driver;
 import com.example.trainingproject.IServices.IDriverService;
-import com.example.trainingproject.Repositories.IDriverRepository;
+import com.example.trainingproject.IRepositories.IDriverRepository;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
